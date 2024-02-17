@@ -28,8 +28,6 @@ class RequestInterceptor extends Interceptor {
     if (response.data != null && response.statusCode == SUCCESSFUL_CODE) {
       if (response.data is List) {
         return NetworkResultSuccess<List<dynamic>>(data: response.data);
-      } else if (response.data is Map<String, dynamic>) {
-        return NetworkResultSuccess<Map<String, dynamic>>(data: response.data);
       } else {
         return NetworkResultSuccess<dynamic>(data: response.data);
       }
