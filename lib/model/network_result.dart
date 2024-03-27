@@ -36,8 +36,10 @@ final class NetworkResultCustomError<T> extends NetworkResultError<T> {
   NetworkResultCustomError({
     super.code,
     super.message,
-    //ApiError? apiError,
+    this.apiError,
   });
+
+  dynamic apiError;
 }
 
 final class NetworkResultUnknownError<T> extends NetworkResultError<T> {

@@ -12,6 +12,7 @@ extension ResultMapperExtensions on NetworkResult<dynamic> {
       return NetworkCustom(
         code: (this as NetworkResultCustomError).code,
         message: (this as NetworkResultCustomError).message,
+        apiError: (this as NetworkResultCustomError).apiError,
       );
     } else if (this is NetworkResultServerError) {
       return ServerError(

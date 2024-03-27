@@ -68,7 +68,7 @@ class ServerError<T> extends Failure<T> {
 }
 
 class NetworkCustom<T> extends Failure<T> {
-  NetworkCustom({super.code, super.message});
+  NetworkCustom({super.code, super.message, dynamic apiError});
 }
 
 class NetworkUnknown<T> extends Failure<T> {
