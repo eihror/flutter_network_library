@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:example/github_owner.dart';
 import 'package:example/github_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:network/mapper/domain_result_mapper.dart';
@@ -34,6 +35,28 @@ class MyApp extends StatefulWidget {
             for (var element in data) {
               print(element);
             }
+          })
+          ..onFailure((exception) {});
+      }
+    } on Exception catch (e) {
+      FailureUnknown(exception: e);
+    }
+  }
+
+  FutureOr<void> fetchGithubUser() async {
+    try {
+      final result =
+          await network.client.get<NetworkResult<dynamic>>("users/eihror");
+
+      if (result.data != null) {
+        final Result<GithubOwner> list =
+            result.data!.toDomainResult<dynamic, GithubOwner>((networkData) {
+          return GithubOwner.fromJson(networkData);
+        });
+
+        list
+          ..onSuccess((data) {
+            print(data);
           })
           ..onFailure((exception) {});
       }

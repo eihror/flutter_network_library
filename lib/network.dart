@@ -2,11 +2,11 @@ library network;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:network/interceptor/network_log_interceptor.dart';
 import 'package:network/interceptor/request_interceptor.dart';
 import 'package:network/model/network_result.dart';
 import 'package:network/network_rest_api.dart';
 import 'package:network/network_result_handler.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class Network extends NetworkRestApi {
   Network._({
@@ -54,7 +54,7 @@ class Network extends NetworkRestApi {
 
     if (!kReleaseMode) {
       _dio.interceptors.add(
-        PrettyDioLogger(
+        NetworkLogInterceptor(
           requestHeader: true,
           requestBody: true,
           responseHeader: true,
