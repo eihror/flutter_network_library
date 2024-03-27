@@ -35,14 +35,14 @@ class RequestInterceptor extends Interceptor {
 
     if (CLIENT_ERROR_CODES.contains(response.statusCode)) {
       return NetworkResultClientError(
-        code: response.statusCode,
+        statusCode: response.statusCode,
         message: response.statusMessage,
       );
     }
 
     if (SERVER_ERROR_CODES.contains(response.statusCode)) {
       return NetworkResultServerError(
-        code: response.statusCode,
+        statusCode: response.statusCode,
         message: response.statusMessage,
       );
     }
@@ -52,7 +52,7 @@ class RequestInterceptor extends Interceptor {
         response.statusCode != SUCCESSFUL_NO_CONTENT_CODE &&
         response.statusCode != SUCCESSFUL_CODE) {
       return NetworkResultUnknownError(
-        code: response.statusCode,
+        statusCode: response.statusCode,
         message: response.statusMessage,
       );
     }

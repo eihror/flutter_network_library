@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 abstract class NetworkResult<T> {}
 
 final class NetworkResultSuccess<T> extends NetworkResult<T> {
@@ -10,41 +12,44 @@ final class NetworkResultSuccess<T> extends NetworkResult<T> {
 
 abstract class NetworkResultError<T> extends NetworkResult<T> {
   NetworkResultError({
-    this.code = -1,
+    this.statusCode,
+    this.code,
     this.message,
+    this.errorResponse,
   });
 
-  final int? code;
+  final int? statusCode;
+  final String? code;
   final String? message;
+  final dynamic errorResponse;
 }
 
 final class NetworkResultClientError<T> extends NetworkResultError<T> {
   NetworkResultClientError({
-    super.code,
+    super.statusCode,
     super.message,
   });
 }
 
 final class NetworkResultServerError<T> extends NetworkResultError<T> {
   NetworkResultServerError({
-    super.code,
+    super.statusCode,
     super.message,
   });
 }
 
 final class NetworkResultCustomError<T> extends NetworkResultError<T> {
   NetworkResultCustomError({
+    super.statusCode,
     super.code,
     super.message,
-    this.apiError,
+    super.errorResponse,
   });
-
-  dynamic apiError;
 }
 
 final class NetworkResultUnknownError<T> extends NetworkResultError<T> {
   NetworkResultUnknownError({
-    super.code,
+    super.statusCode,
     super.message,
   });
 }
@@ -54,7 +59,7 @@ abstract class NetworkResultException<T> extends NetworkResult<T> {
     required this.exception,
   });
 
-  final Exception exception;
+  final DioException exception;
 }
 
 final class NetworkResultNoInternetConnectionException<T>
@@ -71,8 +76,8 @@ final class NetworkResultSocketTimeoutException<T>
   });
 }
 
-final class NetworkResultUnknownException<T> extends NetworkResultException<T> {
-  NetworkResultUnknownException({
+final class NetworkResultCustomException<T> extends NetworkResultException<T> {
+  NetworkResultCustomException({
     required super.exception,
   });
 }

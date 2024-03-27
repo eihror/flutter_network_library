@@ -5,32 +5,31 @@ extension ResultMapperExtensions on NetworkResult<dynamic> {
   Result<R> toDomainResult<T, R>(R Function(T networkData) dataMapper) {
     if (this is NetworkResultClientError) {
       return ClientError(
-        code: (this as NetworkResultClientError).code,
+        code: (this as NetworkResultClientError).statusCode,
         message: (this as NetworkResultClientError).message,
       );
     } else if (this is NetworkResultCustomError) {
       return NetworkCustom(
-        code: (this as NetworkResultCustomError).code,
+        code: (this as NetworkResultCustomError).statusCode,
         message: (this as NetworkResultCustomError).message,
-        apiError: (this as NetworkResultCustomError).apiError,
       );
     } else if (this is NetworkResultServerError) {
       return ServerError(
-        code: (this as NetworkResultServerError).code,
+        code: (this as NetworkResultServerError).statusCode,
         message: (this as NetworkResultServerError).message,
       );
     } else if (this is NetworkResultUnknownError) {
       return NetworkUnknown(
-        code: (this as NetworkResultUnknownError).code,
+        code: (this as NetworkResultUnknownError).statusCode,
         message: (this as NetworkResultUnknownError).message,
       );
     } else if (this is NetworkResultNoInternetConnectionException) {
       return NoInternetConnection();
     } else if (this is NetworkResultSocketTimeoutException) {
       return Timeout();
-    } else if (this is NetworkResultUnknownException) {
+    } else if (this is NetworkResultCustomException) {
       return FailureUnknown(
-        exception: (this as NetworkResultUnknownException).exception,
+        exception: (this as NetworkResultCustomException).exception,
       );
     } else {
       return Successful(

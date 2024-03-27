@@ -19,7 +19,7 @@ abstract class NetworkResultHandler<T> {
     required Response<T> response,
   }) {
     if ((CLIENT_ERROR_CODES.contains(response.statusCode) ||
-            SERVER_ERROR_CODES.contains(response.statusCode)) &&
+        SERVER_ERROR_CODES.contains(response.statusCode)) &&
         !SUCCESS_CODES.contains(response.statusCode)) {
       return _treatFailure(response: response);
     }
@@ -47,7 +47,7 @@ abstract class NetworkResultHandler<T> {
       case DioExceptionType.badResponse:
       case DioExceptionType.cancel:
       case DioExceptionType.unknown:
-        result = NetworkResultUnknownException(
+        result = NetworkResultCustomException(
           exception: exception,
         );
     }
@@ -70,20 +70,20 @@ abstract class NetworkResultHandler<T> {
   }) {
     if (CLIENT_ERROR_CODES.contains(response.statusCode)) {
       return NetworkResultClientError(
-        code: response.statusCode,
+        statusCode: response.statusCode,
         message: response.statusMessage,
       );
     }
 
     if (SERVER_ERROR_CODES.contains(response.statusCode)) {
       return NetworkResultServerError(
-        code: response.statusCode,
+        statusCode: response.statusCode,
         message: response.statusMessage,
       );
     }
 
     return NetworkResultUnknownError(
-      code: response.statusCode,
+      statusCode: response.statusCode,
       message: response.statusMessage,
     );
   }

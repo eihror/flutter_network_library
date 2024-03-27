@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:example/github_owner.dart';
 import 'package:example/github_repo.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatefulWidget {
           })
           ..onFailure((exception) {});
       }
-    } on Exception catch (e) {
+    } on DioException catch (e) {
       FailureUnknown(exception: e);
     }
   }
@@ -60,7 +61,7 @@ class MyApp extends StatefulWidget {
           })
           ..onFailure((exception) {});
       }
-    } on Exception catch (e) {
+    } on DioException catch (e) {
       FailureUnknown(exception: e);
     }
   }

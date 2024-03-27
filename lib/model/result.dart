@@ -1,8 +1,10 @@
+import 'package:dio/dio.dart';
+
 class Result<T> {
   const Result({this.data, this.exception});
 
   final T? data;
-  final Exception? exception;
+  final DioException? exception;
 
   bool get isSuccess => this is Successful<T>;
 
@@ -14,7 +16,7 @@ class Result<T> {
     }
   }
 
-  void onFailure(Function(Exception exception) call) {
+  void onFailure(Function(DioException exception) call) {
     if (isFailure) {
       call(exception!);
     }
@@ -45,10 +47,12 @@ class Failure<T> extends Result<T> {
   Failure({
     this.code = -1,
     this.message,
+    this.errorBody,
   });
 
   final int? code;
   final String? message;
+  final dynamic errorBody;
 }
 
 class NoInternetConnection<T> extends Failure<T> {
@@ -68,7 +72,7 @@ class ServerError<T> extends Failure<T> {
 }
 
 class NetworkCustom<T> extends Failure<T> {
-  NetworkCustom({super.code, super.message, dynamic apiError});
+  NetworkCustom({super.code, super.message});
 }
 
 class NetworkUnknown<T> extends Failure<T> {
@@ -78,11 +82,11 @@ class NetworkUnknown<T> extends Failure<T> {
 class FailureUnknown<T> extends Failure<T> {
   FailureUnknown({this.exception});
 
-  final Exception? exception;
+  final DioException? exception;
 }
 
 class FailureCustom<T> extends Failure<T> {
   FailureCustom({this.exception});
 
-  final Exception? exception;
+  final DioException? exception;
 }
