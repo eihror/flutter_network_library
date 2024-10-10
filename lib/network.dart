@@ -2,8 +2,9 @@ library network;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:network/helper/network_helper.dart';
 import 'package:network/interceptor/network_log_interceptor.dart';
-import 'package:network/interceptor/request_interceptor.dart';
+import 'package:network/interceptor/request_response_interceptor.dart';
 
 class Network {
   Network._({
@@ -38,6 +39,7 @@ class Network {
   }
 
   late Dio _dio;
+  late NetworkHelper networkHelper;
 
   final List<Interceptor>? interceptorList;
   final BaseOptions options;
@@ -47,7 +49,10 @@ class Network {
   void _setupInterceptorList({
     List<Interceptor>? value,
   }) {
-    _dio.interceptors.add(RequestInterceptor());
+    networkHelper = NetworkHelper();
+    _dio.interceptors.add(
+      RequestResponseInterceptor(networkHelper: networkHelper),
+    );
 
     if (!kReleaseMode) {
       _dio.interceptors.add(
