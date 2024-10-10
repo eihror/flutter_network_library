@@ -9,7 +9,9 @@ class RequestResponseInterceptor extends InterceptorsWrapper {
 
   @override
   Future<void> onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     // Check for network and internet connectivity before sending request
     bool isConnected = await networkHelper.isConnectedAndHasInternet();
 
@@ -25,24 +27,11 @@ class RequestResponseInterceptor extends InterceptorsWrapper {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     switch (err.type) {
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-      case DioExceptionType.connectionError:
-        throw err;
       case DioExceptionType.badResponse:
-        try {
-          final errorResponse = err.response?.data;
-          throw NetworkApiException(
-            error: errorResponse,
-            requestOptions: err.requestOptions,
-          );
-        } on Exception catch (e) {
-          throw NetworkUnknownException(
-            message: e.toString(),
-            requestOptions: err.requestOptions,
-          );
-        }
+        throw NetworkApiException(
+          error: err.response?.data,
+          requestOptions: err.requestOptions,
+        );
       default:
         throw NetworkUnknownException(
           message: err.message,

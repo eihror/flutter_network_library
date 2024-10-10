@@ -14,8 +14,8 @@ class NetworkException extends DioException {
   }
 }
 
-class NetworkApiException<T> extends NetworkException {
-  final T error;
+class NetworkApiException extends NetworkException {
+  final dynamic error;
 
   NetworkApiException({
     required this.error,

@@ -3,8 +3,8 @@ library network;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:network/helper/network_helper.dart';
-import 'package:network/interceptor/network_log_interceptor.dart';
 import 'package:network/interceptor/request_response_interceptor.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class Network {
   Network._({
@@ -56,7 +56,7 @@ class Network {
 
     if (!kReleaseMode) {
       _dio.interceptors.add(
-        NetworkLogInterceptor(
+        PrettyDioLogger(
           requestHeader: true,
           requestBody: true,
           responseHeader: true,

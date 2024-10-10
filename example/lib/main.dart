@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:example/github_owner.dart';
 import 'package:example/github_repo.dart';
 import 'package:flutter/material.dart';
-import 'package:network/mapper/domain_result_mapper.dart';
-import 'package:network/model/network_result.dart';
+import 'package:network/exception/network_exception.dart';
 import 'package:network/model/result.dart';
 import 'package:network/network.dart';
 
@@ -17,52 +15,58 @@ class MyApp extends StatefulWidget {
   MyApp({super.key});
 
   final Network network = Network.createNetwork(
-    baseUrl: "https://api.github.com/",
+    baseUrl: "http://192.168.1.5:3000/",
   );
 
   FutureOr<void> fetchGithubRepo() async {
     try {
-      final result = await network.client
-          .get<NetworkResult<List<dynamic>>>("users/eihror/repos");
+      final result =
+          await network.client.get<List<dynamic>>("users/eihror/repos");
 
-      if (result.data != null) {
-        final Result<List<GithubRepo>> list = result.data!
-            .toDomainResult<List<dynamic>, List<GithubRepo>>((networkData) {
-          return networkData.map((e) => GithubRepo.fromJson(e)).toList();
+      final githubRepoListResult = Successful(
+        data: result.data?.map((e) => GithubRepo.fromJson(e)).toList() ??
+            List.empty(),
+      );
+
+      githubRepoListResult
+        ..onSuccess((data) {
+          for (var element in data) {
+            print(element);
+          }
+        })
+        ..onFailure((exception) {
+          print(exception.message);
         });
-
-        list
-          ..onSuccess((data) {
-            for (var element in data) {
-              print(element);
-            }
-          })
-          ..onFailure((exception) {});
-      }
-    } on DioException catch (e) {
-      FailureUnknown(exception: e);
+    } on NetworkException catch (e) {
+      print("Exception: $e");
     }
   }
 
   FutureOr<void> fetchGithubUser() async {
     try {
-      final result =
-          await network.client.get<NetworkResult<dynamic>>("users/eihror");
+      final request = await network.client.get<dynamic>("users/eihror");
 
-      if (result.data != null) {
-        final Result<GithubOwner> list =
-            result.data!.toDomainResult<dynamic, GithubOwner>((networkData) {
-          return GithubOwner.fromJson(networkData);
+      final githubOwnerResult =
+          Successful(data: GithubOwner.fromJson(request.data));
+
+      githubOwnerResult
+        ..onSuccess((data) {
+          print(data);
+        })
+        ..onFailure((exception) {
+          print(exception.message);
         });
+    } on NetworkException catch (e) {
+      print("Exception: $e");
+    }
+  }
 
-        list
-          ..onSuccess((data) {
-            print(data);
-          })
-          ..onFailure((exception) {});
-      }
-    } on DioException catch (e) {
-      FailureUnknown(exception: e);
+  FutureOr<void> doLogin() async {
+    try {
+      final result = await network.client.post<dynamic>("auth/login",
+          data: {"email": "", "password": "qwerqwer"});
+    } on NetworkException catch (e) {
+      print("Exception: $e");
     }
   }
 
@@ -73,7 +77,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    widget.fetchGithubRepo();
+    widget.doLogin();
 
     return MaterialApp(
       title: 'Flutter Demo',
