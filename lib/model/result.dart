@@ -1,11 +1,8 @@
-import 'package:dio/dio.dart';
-import 'package:network/exception/network_exception.dart';
-
 class Result<T> {
   const Result({this.data, this.exception});
 
   final T? data;
-  final NetworkException? exception;
+  final Exception? exception;
 
   bool get isSuccess => this is Successful<T>;
 
@@ -17,7 +14,7 @@ class Result<T> {
     }
   }
 
-  void onFailure(Function(NetworkException exception) call) {
+  void onFailure(Function(Exception exception) call) {
     if (isFailure) {
       call(exception!);
     }
@@ -45,5 +42,5 @@ class Successful<T> extends Result<T> {
 }
 
 class Failure<T> extends Result<T> {
-  Failure({required NetworkException exception}) : super(exception: exception);
+  Failure({required Exception exception}) : super(exception: exception);
 }

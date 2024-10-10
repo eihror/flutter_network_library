@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-class NetworkException extends DioException {
+class NetworkException extends DioException implements Exception {
   final String? message;
 
   NetworkException({

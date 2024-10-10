@@ -35,7 +35,7 @@ class MyApp extends StatefulWidget {
           }
         })
         ..onFailure((exception) {
-          print(exception.message);
+          print(exception);
         });
     } on NetworkException catch (e) {
       print("Exception: $e");
@@ -54,7 +54,7 @@ class MyApp extends StatefulWidget {
           print(data);
         })
         ..onFailure((exception) {
-          print(exception.message);
+          print(exception);
         });
     } on NetworkException catch (e) {
       print("Exception: $e");
@@ -66,7 +66,12 @@ class MyApp extends StatefulWidget {
       final result = await network.client.post<dynamic>("auth/login",
           data: {"email": "", "password": "qwerqwer"});
     } on NetworkException catch (e) {
-      print("Exception: $e");
+      final error = Failure(exception: e);
+      if (error.exception is NetworkApiException) {
+        print((error.exception as NetworkApiException).error);
+      }else{
+        print("Exception: $e");
+      }
     }
   }
 
