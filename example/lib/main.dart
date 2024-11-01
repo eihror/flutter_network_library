@@ -4,7 +4,6 @@ import 'package:example/github_owner.dart';
 import 'package:example/github_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:network/exception/network_exception.dart';
-import 'package:network/model/result.dart';
 import 'package:network/network.dart';
 
 void main() {
@@ -23,20 +22,14 @@ class MyApp extends StatefulWidget {
       final result =
           await network.client.get<List<dynamic>>("users/eihror/repos");
 
-      final githubRepoListResult = Successful(
-        data: result.data?.map((e) => GithubRepo.fromJson(e)).toList() ??
-            List.empty(),
-      );
+      final dataResult =
+          result.data?.map((e) => GithubRepo.fromJson(e)).toList();
 
-      githubRepoListResult
-        ..onSuccess((data) {
-          for (var element in data) {
-            print(element);
-          }
-        })
-        ..onFailure((exception) {
-          print(exception);
-        });
+      if (dataResult != null) {
+        for (var element in dataResult) {
+          print(element);
+        }
+      }
     } on NetworkException catch (e) {
       print("Exception: $e");
     }
@@ -46,32 +39,12 @@ class MyApp extends StatefulWidget {
     try {
       final request = await network.client.get<dynamic>("users/eihror");
 
-      final githubOwnerResult =
-          Successful(data: GithubOwner.fromJson(request.data));
-
-      githubOwnerResult
-        ..onSuccess((data) {
-          print(data);
-        })
-        ..onFailure((exception) {
-          print(exception);
-        });
+      if (request.data != null) {
+        final dataResult = GithubOwner.fromJson(request.data);
+        print(dataResult);
+      }
     } on NetworkException catch (e) {
       print("Exception: $e");
-    }
-  }
-
-  FutureOr<void> doLogin() async {
-    try {
-      final result = await network.client.post<dynamic>("auth/login",
-          data: {"email": "", "password": "qwerqwer"});
-    } on NetworkException catch (e) {
-      final error = Failure(exception: e);
-      if (error.exception is NetworkApiException) {
-        print((error.exception as NetworkApiException).error);
-      } else {
-        print("Exception: $e");
-      }
     }
   }
 
