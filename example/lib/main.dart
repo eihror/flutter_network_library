@@ -15,7 +15,7 @@ class MyApp extends StatefulWidget {
   MyApp({super.key});
 
   final Network network = Network.createNetwork(
-    baseUrl: "http://192.168.1.5:3000/",
+    baseUrl: "https://api.github.com/",
   );
 
   FutureOr<void> fetchGithubRepo() async {
@@ -69,7 +69,7 @@ class MyApp extends StatefulWidget {
       final error = Failure(exception: e);
       if (error.exception is NetworkApiException) {
         print((error.exception as NetworkApiException).error);
-      }else{
+      } else {
         print("Exception: $e");
       }
     }
@@ -82,7 +82,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    widget.doLogin();
+    widget.fetchGithubRepo();
 
     return MaterialApp(
       title: 'Flutter Demo',
