@@ -44,6 +44,11 @@ class Network {
   final List<Interceptor>? interceptorList;
   final BaseOptions options;
 
+  @visibleForTesting
+  set client(Dio dio) {
+    _dio = dio;
+  }
+
   Dio get client => _dio;
 
   void _setupInterceptorList({
