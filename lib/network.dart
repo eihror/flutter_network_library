@@ -54,9 +54,8 @@ class Network {
   void _setupInterceptorList({
     List<Interceptor>? value,
   }) {
-    networkHelper = NetworkHelper();
     _dio.interceptors.add(
-      RequestResponseInterceptor(networkHelper: networkHelper),
+      RequestResponseInterceptor(),
     );
 
     if (!kReleaseMode) {
