@@ -7,7 +7,7 @@ class RequestResponseInterceptor extends InterceptorsWrapper {
 
   final NetworkHelper networkHelper;
 
-  @override
+  /*@override
   Future<void> onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
@@ -22,7 +22,7 @@ class RequestResponseInterceptor extends InterceptorsWrapper {
         NetworkNoConnectionException(requestOptions: options),
       );
     }
-  }
+  }*/
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
