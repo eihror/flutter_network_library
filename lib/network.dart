@@ -10,6 +10,7 @@ class Network {
   Network._({
     required this.options,
     this.interceptorList,
+    this.enableLogs = false,
   }) {
     _dio = Dio(
       options,
@@ -25,6 +26,8 @@ class Network {
     String contentType = "application/json; charset=utf-8",
     int connectTimeoutInMilliseconds = 10000,
     int receiveTimeoutInMilliseconds = 10000,
+    int sendTimeoutInMilliseconds = 10000,
+    bool? enableLogs,
     List<Interceptor>? interceptorList,
   }) {
     return Network._(
@@ -33,8 +36,10 @@ class Network {
         contentType: contentType,
         connectTimeout: Duration(milliseconds: connectTimeoutInMilliseconds),
         receiveTimeout: Duration(milliseconds: receiveTimeoutInMilliseconds),
+        sendTimeout: Duration(milliseconds: sendTimeoutInMilliseconds),
       ),
       interceptorList: interceptorList,
+      enableLogs: enableLogs ?? false,
     );
   }
 
@@ -43,6 +48,7 @@ class Network {
 
   final List<Interceptor>? interceptorList;
   final BaseOptions options;
+  final bool enableLogs;
 
   @visibleForTesting
   set client(Dio dio) {
@@ -59,7 +65,7 @@ class Network {
       RequestResponseInterceptor(networkHelper: networkHelper),
     );
 
-    if (!kReleaseMode) {
+    if (!kReleaseMode && enableLogs) {
       _dio.interceptors.add(
         PrettyDioLogger(
           requestHeader: true,
