@@ -28,15 +28,21 @@ class RequestResponseInterceptor extends InterceptorsWrapper {
   void onError(DioException err, ErrorInterceptorHandler handler) {
     switch (err.type) {
       case DioExceptionType.badResponse:
-        throw NetworkApiException(
-          error: err.response?.data,
-          requestOptions: err.requestOptions,
+        handler.reject(
+          NetworkApiException(
+            error: err.response?.data,
+            requestOptions: err.requestOptions,
+          ),
         );
+        break;
       default:
-        throw NetworkUnknownException(
-          message: err.message,
-          requestOptions: err.requestOptions,
+        handler.reject(
+          NetworkUnknownException(
+            message: err.message,
+            requestOptions: err.requestOptions,
+          ),
         );
+        break;
     }
   }
 
