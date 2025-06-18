@@ -35,6 +35,13 @@ class RequestResponseInterceptor extends InterceptorsWrapper {
           ),
         );
         break;
+      case DioExceptionType.connectionError:
+        handler.reject(
+          NetworkNoConnectionException(
+            requestOptions: err.requestOptions,
+          ),
+        );
+        break;
       default:
         handler.reject(
           NetworkUnknownException(
