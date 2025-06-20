@@ -15,6 +15,7 @@ class MyApp extends StatefulWidget {
 
   final Network network = Network.createNetwork(
     baseUrl: "https://api.github.com/",
+    enableLogs: true,
   );
 
   FutureOr<void> fetchGithubRepo() async {
@@ -27,7 +28,7 @@ class MyApp extends StatefulWidget {
 
       if (dataResult != null) {
         for (var element in dataResult) {
-          print(element);
+          //print(element);
         }
       }
     } on NetworkException catch (e) {

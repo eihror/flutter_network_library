@@ -1,6 +1,6 @@
 name: network
 description: "A flutter abstraction library for Network"
-version: 1.1.11
+version: 1.1.12
 homepage:
 
 environment:

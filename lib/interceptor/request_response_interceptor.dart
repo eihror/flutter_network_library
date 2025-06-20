@@ -7,28 +7,11 @@ class RequestResponseInterceptor extends InterceptorsWrapper {
 
   final NetworkHelper networkHelper;
 
-  /*@override
-  Future<void> onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) async {
-    // Check for network and internet connectivity before sending request
-    bool isConnected = await networkHelper.isConnectedAndHasInternet();
-
-    if (isConnected) {
-      return handler.next(options); // Continue with the request
-    } else {
-      return handler.reject(
-        NetworkNoConnectionException(requestOptions: options),
-      );
-    }
-  }*/
-
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     switch (err.type) {
       case DioExceptionType.badResponse:
-        handler.reject(
+        handler.next(
           NetworkApiException(
             error: err.response?.data,
             requestOptions: err.requestOptions,
@@ -36,14 +19,14 @@ class RequestResponseInterceptor extends InterceptorsWrapper {
         );
         break;
       case DioExceptionType.connectionError:
-        handler.reject(
+        handler.next(
           NetworkNoConnectionException(
             requestOptions: err.requestOptions,
           ),
         );
         break;
       default:
-        handler.reject(
+        handler.next(
           NetworkUnknownException(
             message: err.message,
             requestOptions: err.requestOptions,
