@@ -61,9 +61,6 @@ class Network {
     List<Interceptor>? value,
   }) {
     networkHelper = NetworkHelper();
-    _dio.interceptors.add(
-      RequestResponseInterceptor(networkHelper: networkHelper),
-    );
 
     if (!kReleaseMode && enableLogs) {
       _dio.interceptors.add(
@@ -74,6 +71,10 @@ class Network {
         ),
       );
     }
+
+    _dio.interceptors.add(
+      RequestResponseInterceptor(networkHelper: networkHelper),
+    );
 
     if (value != null) {
       for (var element in value) {
