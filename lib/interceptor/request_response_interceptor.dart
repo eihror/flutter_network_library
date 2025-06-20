@@ -11,7 +11,7 @@ class RequestResponseInterceptor extends InterceptorsWrapper {
   void onError(DioException err, ErrorInterceptorHandler handler) {
     switch (err.type) {
       case DioExceptionType.badResponse:
-        handler.next(
+        handler.reject(
           NetworkApiException(
             error: err.response?.data,
             requestOptions: err.requestOptions,
@@ -19,14 +19,14 @@ class RequestResponseInterceptor extends InterceptorsWrapper {
         );
         break;
       case DioExceptionType.connectionError:
-        handler.next(
+        handler.reject(
           NetworkNoConnectionException(
             requestOptions: err.requestOptions,
           ),
         );
         break;
       default:
-        handler.next(
+        handler.reject(
           NetworkUnknownException(
             message: err.message,
             requestOptions: err.requestOptions,
