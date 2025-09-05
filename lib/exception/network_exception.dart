@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 class NetworkException extends DioException implements Exception {
+  @override
   final String? message;
 
   NetworkException({
@@ -15,6 +16,7 @@ class NetworkException extends DioException implements Exception {
 }
 
 class NetworkApiException extends NetworkException {
+  @override
   final dynamic error;
 
   NetworkApiException({
@@ -34,6 +36,14 @@ class NetworkNoConnectionException extends NetworkException {
   }) : super(
           message:
               'No connection available. Please check your network settings and try again.',
+          requestOptions: requestOptions,
+        );
+}
+
+class NetworkTimeoutException extends NetworkException {
+  NetworkTimeoutException({required RequestOptions requestOptions})
+      : super(
+          message: 'Request exceeded the allowed time limit.',
           requestOptions: requestOptions,
         );
 }

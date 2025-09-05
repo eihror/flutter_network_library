@@ -25,6 +25,15 @@ class RequestResponseInterceptor extends InterceptorsWrapper {
           ),
         );
         break;
+      case DioExceptionType.connectionTimeout ||
+            DioExceptionType.sendTimeout ||
+            DioExceptionType.receiveTimeout:
+        handler.reject(
+          NetworkTimeoutException(
+            requestOptions: err.requestOptions,
+          ),
+        );
+        break;
       default:
         handler.reject(
           NetworkUnknownException(
