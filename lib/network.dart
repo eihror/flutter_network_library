@@ -10,6 +10,7 @@ class Network {
   Network._({
     required this.options,
     this.interceptorList,
+    this.cacheInterceptor,
     this.enableLogs = false,
   }) {
     _dio = Dio(
@@ -29,6 +30,7 @@ class Network {
     int sendTimeoutInMilliseconds = 10000,
     bool? enableLogs,
     List<Interceptor>? interceptorList,
+    Interceptor? cacheInterceptor,
   }) {
     return Network._(
       options: BaseOptions(
@@ -39,6 +41,7 @@ class Network {
         sendTimeout: Duration(milliseconds: sendTimeoutInMilliseconds),
       ),
       interceptorList: interceptorList,
+      cacheInterceptor: cacheInterceptor,
       enableLogs: enableLogs ?? false,
     );
   }
@@ -47,6 +50,7 @@ class Network {
   late NetworkHelper networkHelper;
 
   final List<Interceptor>? interceptorList;
+  final Interceptor? cacheInterceptor;
   final BaseOptions options;
   final bool enableLogs;
 
@@ -61,6 +65,10 @@ class Network {
     List<Interceptor>? value,
   }) {
     networkHelper = NetworkHelper();
+
+    if (cacheInterceptor != null) {
+      _dio.interceptors.add(cacheInterceptor!);
+    }
 
     if (!kReleaseMode && enableLogs) {
       _dio.interceptors.add(
