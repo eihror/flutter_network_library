@@ -12,6 +12,7 @@ class Network {
     this.interceptorList,
     this.cacheInterceptor,
     this.enableLogs = false,
+    this.enableDefaultErrorHandler = true,
   }) {
     _dio = Dio(
       options,
@@ -29,6 +30,7 @@ class Network {
     int receiveTimeoutInMilliseconds = 10000,
     int sendTimeoutInMilliseconds = 10000,
     bool? enableLogs,
+    bool? enableDefaultErrorHandler,
     List<Interceptor>? interceptorList,
     Interceptor? cacheInterceptor,
   }) {
@@ -43,6 +45,7 @@ class Network {
       interceptorList: interceptorList,
       cacheInterceptor: cacheInterceptor,
       enableLogs: enableLogs ?? false,
+      enableDefaultErrorHandler: enableDefaultErrorHandler ?? true,
     );
   }
 
@@ -53,6 +56,10 @@ class Network {
   final Interceptor? cacheInterceptor;
   final BaseOptions options;
   final bool enableLogs;
+
+  /// When false, [RequestResponseInterceptor] is not registered, so the
+  /// consuming project can handle errors with its own interceptor.
+  final bool enableDefaultErrorHandler;
 
   @visibleForTesting
   set client(Dio dio) {
@@ -80,9 +87,11 @@ class Network {
       );
     }
 
-    _dio.interceptors.add(
-      RequestResponseInterceptor(networkHelper: networkHelper),
-    );
+    if (enableDefaultErrorHandler) {
+      _dio.interceptors.add(
+        RequestResponseInterceptor(networkHelper: networkHelper),
+      );
+    }
 
     if (value != null) {
       for (var element in value) {

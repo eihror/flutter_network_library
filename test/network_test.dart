@@ -146,6 +146,20 @@ void main() {
       );
     });
 
+    test('não deve registrar o error handler padrão quando desativado', () {
+      // Arrange & Act
+      final network = Network.createNetwork(
+        baseUrl: 'https://api.example.com',
+        enableDefaultErrorHandler: false,
+      );
+
+      // Assert
+      expect(
+        network.client.interceptors.any((i) => i is RequestResponseInterceptor),
+        isFalse,
+      );
+    });
+
     test('deve usar as configurações de timeout corretas', () {
       // Arrange & Act
       final network = Network.createNetwork(
